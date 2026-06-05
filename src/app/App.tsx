@@ -1,0 +1,91 @@
+import imgTextures from "figma:asset/textures.jpg";
+import { Hero } from "./sections/Hero";
+import { Directions } from "./sections/Directions";
+import { Team } from "./sections/Team";
+import { Showcase, type ShowcaseItem } from "./sections/Showcase";
+import { Clients } from "./sections/Clients";
+import { Cycle } from "./sections/Cycle";
+import { ContactForm } from "./sections/ContactForm";
+import { Footer } from "./sections/Footer";
+
+const PRODUCTS: ShowcaseItem[] = [
+  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+];
+
+const CASES: ShowcaseItem[] = [
+  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+];
+
+function LightPanel() {
+  return (
+    <div
+      className="relative bg-[#f5f7ff] rounded-[40px] overflow-hidden w-full px-[180px] py-[108px] flex flex-col gap-[180px] items-start"
+    >
+      <div
+        className="absolute inset-0 mix-blend-color-dodge pointer-events-none"
+        style={{
+          backgroundImage: `url(${imgTextures})`,
+          backgroundSize: "401px 389px",
+          backgroundPosition: "top left",
+          backgroundRepeat: "repeat",
+        }}
+      />
+      <div
+        className="absolute left-[121px] top-[297px] w-[1281px] h-[154px] bg-[#a3b2d4] blur-[192.5px] pointer-events-none"
+      />
+      <div className="relative z-10 w-full flex flex-col gap-[180px] items-start">
+        <Directions />
+        <div className="w-full">
+          <Team />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DarkShowcaseStack() {
+  return (
+    <div className="flex flex-col gap-[89px] items-start w-full px-[180px]">
+      <Showcase title="Наши продукты" items={PRODUCTS} />
+      <Showcase title="Кейсы" items={CASES} />
+      <Clients />
+    </div>
+  );
+}
+
+function CycleAndForm() {
+  return (
+    <div className="relative w-full rounded-[40px] overflow-hidden bg-[#f5f7ff] py-[141px] flex flex-col gap-[80px] items-center">
+      <div
+        className="absolute bg-[#c2d0f3] blur-[192.5px] h-[264px] w-[1067px] left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{ top: 298 }}
+      />
+      <div
+        className="absolute bg-[#c2d0f3] blur-[192.5px] h-[539px] w-[945px] left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{ top: 815 }}
+      />
+      <div className="relative z-10 flex flex-col gap-[80px] items-center w-full">
+        <Cycle />
+        <ContactForm />
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="bg-[#030303] relative w-full min-h-screen overflow-x-hidden">
+      <div className="relative flex flex-col items-stretch gap-[108px] w-[1512px] mx-auto">
+        <Hero />
+        <LightPanel />
+        <DarkShowcaseStack />
+        <CycleAndForm />
+        <Footer />
+      </div>
+    </div>
+  );
+}
