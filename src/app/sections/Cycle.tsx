@@ -123,9 +123,9 @@ function CycleCard({ title, subtitle, bullets, decoration }: CycleCardData) {
 
 export function Cycle() {
   return (
-    <div className="flex flex-col gap-[30px] items-center w-[963px]">
+    <div className="flex flex-col gap-[40px] items-center w-[963px]">
       <Wave>
-        <div className="flex flex-col gap-[30px] items-center text-[#030303] text-center">
+        <div className="flex flex-col gap-[25px] items-center text-[#030303] text-center">
           <SectionTitle>Весь цикл или один этап — решаете вы</SectionTitle>
           <p className="font-['Inter:Regular',sans-serif] text-[18px] tracking-[-0.72px] leading-[99.9%]">
             Можем взять проект с нуля или подключиться там, где нужна помощь
@@ -140,7 +140,7 @@ export function Cycle() {
         ))}
       </div>
       <Wave delay={0.24}>
-        <PillButton tone="dark" className="mt-[10px]" trailing={<ArrowIcon fill="#ffffff" />}>
+        <PillButton tone="dark" trailing={<ArrowIcon fill="#ffffff" />}>
           Связаться с нами
         </PillButton>
       </Wave>

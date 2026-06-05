@@ -5,11 +5,11 @@ import { PillButton } from "../components/PillButton";
 import { ArrowIcon } from "../components/ArrowIcon";
 import { hoverScale } from "../lib/motion";
 
-const LINKS = ["Главная", "Направления", "Наши продукты", "Кейсы", "Как мы работаем"];
+const LINKS = ["Главная", "Направления", "Продукты", "Кейсы", "Услуги"];
 
 export function Footer() {
   return (
-    <footer className="bg-[#030303] w-full pt-[48px] pb-[48px] relative">
+    <footer className="bg-[#030303] w-full pt-[100px] pb-[100px] relative">
       <div className="w-[1152px] mx-auto">
         <div className="flex justify-between items-start">
           <nav className="flex flex-col gap-[15px] font-['Inter:Regular',sans-serif] text-white text-[16px] tracking-[-0.64px]">
@@ -42,13 +42,13 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-[46px]">
+        <div className="mt-[30px]">
           <PillButton tone="light" size="sm" trailing={<ArrowIcon />}>
             Обсудить проект
           </PillButton>
         </div>
 
-        <p className="mt-[80px] font-['Inter:Regular',sans-serif] text-[#9ca1ba] text-[16px] tracking-[-0.64px]">
+        <p className="mt-[100px] font-['Inter:Regular',sans-serif] text-[#9ca1ba] text-[16px] tracking-[-0.64px]">
           © 2026 Kvazar &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;Политика обработки персональных данных
         </p>
       </div>

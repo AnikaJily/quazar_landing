@@ -23,7 +23,7 @@ const CASES: ShowcaseItem[] = [
 function LightPanel() {
   return (
     <div
-      className="relative bg-[#f5f7ff] rounded-[40px] overflow-hidden w-full px-[180px] py-[108px] flex flex-col gap-[180px] items-start"
+      className="relative mt-[111px] bg-[#f5f7ff] rounded-[40px] overflow-hidden w-full px-[180px] pt-[100px] pb-[180px] flex flex-col gap-[180px] items-start"
     >
       <div
         className="absolute inset-0 mix-blend-color-dodge pointer-events-none"
@@ -49,7 +49,7 @@ function LightPanel() {
 
 function DarkShowcaseStack() {
   return (
-    <div className="flex flex-col gap-[89px] items-start w-full px-[180px]">
+    <div className="flex flex-col gap-[100px] items-start w-full px-[180px] pt-[100px] pb-[100px]">
       <Showcase title="Наши продукты" items={PRODUCTS} />
       <Showcase title="Кейсы" items={CASES} />
       <Clients />
@@ -59,7 +59,7 @@ function DarkShowcaseStack() {
 
 function CycleAndForm() {
   return (
-    <div className="relative w-full rounded-[40px] overflow-hidden bg-[#f5f7ff] py-[141px] flex flex-col gap-[80px] items-center">
+    <div className="relative w-full rounded-[40px] overflow-hidden bg-[#f5f7ff] py-[100px] flex flex-col gap-[100px] items-center">
       <div
         className="absolute bg-[#c2d0f3] blur-[192.5px] h-[264px] w-[1067px] left-1/2 -translate-x-1/2 pointer-events-none"
         style={{ top: 298 }}
@@ -68,7 +68,7 @@ function CycleAndForm() {
         className="absolute bg-[#c2d0f3] blur-[192.5px] h-[539px] w-[945px] left-1/2 -translate-x-1/2 pointer-events-none"
         style={{ top: 815 }}
       />
-      <div className="relative z-10 flex flex-col gap-[80px] items-center w-full">
+      <div className="relative z-10 flex flex-col gap-[100px] items-center w-full">
         <Cycle />
         <ContactForm />
       </div>
@@ -79,7 +79,7 @@ function CycleAndForm() {
 export default function App() {
   return (
     <div className="bg-[#030303] relative w-full min-h-screen overflow-x-hidden">
-      <div className="relative flex flex-col items-stretch gap-[108px] w-[1512px] mx-auto">
+      <div className="relative flex flex-col items-stretch w-[1512px] mx-auto">
         <Hero />
         <LightPanel />
         <DarkShowcaseStack />

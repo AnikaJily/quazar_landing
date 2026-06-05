@@ -70,7 +70,7 @@ export function Directions() {
   return (
     <div className="flex flex-col gap-[50px] items-start w-[1152px] relative z-10">
       <Wave>
-        <SectionTitle className="text-[#030303]">Наши направления</SectionTitle>
+        <SectionTitle className="text-[#030303]">Направления</SectionTitle>
       </Wave>
       <div className="flex items-start justify-between w-full">
         {DIRECTIONS.map((d, i) => (

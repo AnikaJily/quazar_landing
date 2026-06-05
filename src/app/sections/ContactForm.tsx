@@ -5,7 +5,7 @@ import { ArrowIcon } from "../components/ArrowIcon";
 import { Wave } from "../lib/motion";
 
 const FIELD =
-  "bg-[#e6ebf5] rounded-[15px] px-[20px] py-[20px] w-full h-[53px] font-['Inter:Regular',sans-serif] text-[18px] text-[#030303] placeholder:text-[#9ca1ba] tracking-[-0.72px] leading-[99.9%] outline-none focus:ring-2 focus:ring-[#4774BC]/40 transition";
+  "bg-[#e6ebf5] rounded-[15px] px-[20px] py-[20px] w-full font-['Inter:Regular',sans-serif] text-[18px] text-[#030303] placeholder:text-[#9ca1ba] tracking-[-0.72px] leading-[99.9%] outline-none focus:ring-2 focus:ring-[#4774BC]/40 transition";
 
 export function ContactForm() {
   const [sent, setSent] = useState(false);
@@ -15,25 +15,25 @@ export function ContactForm() {
         e.preventDefault();
         setSent(true);
       }}
-      className="flex flex-col gap-[30px] items-center w-[958px]"
+      className="flex flex-col gap-[40px] items-center w-[958px]"
     >
       <Wave className="w-full">
-        <div className="bg-white rounded-[30px] w-full py-[80px] px-[144px] flex flex-col gap-[30px] items-center">
-          <div className="flex flex-col gap-[30px] items-center text-[#030303] text-center">
+        <div className="bg-white rounded-[30px] w-[945px] mx-auto pt-[68px] pb-[80px] flex flex-col gap-[40px] items-center">
+          <div className="flex flex-col gap-[25px] items-center text-[#030303] text-center">
             <SectionTitle>Начнем проект вместе?</SectionTitle>
             <p className="font-['Inter:Regular',sans-serif] text-[18px] tracking-[-0.72px] leading-[99.9%]">
-              Запишитесь на консультацию и получите честную оценку сроков и стоимости
+              Перезвоним в течении 15 минут и дадим честную оценку сроков и стоимости
             </p>
           </div>
-          <div className="flex gap-[25px] items-stretch w-[670px]">
-            <div className="flex flex-col gap-[25px] w-[323px]">
-              <input className={FIELD} placeholder="Имя*" required />
-              <input className={FIELD} placeholder="Номер*" type="tel" required />
-              <input className={FIELD} placeholder="Почта*" type="email" required />
+          <div className="grid grid-cols-2 gap-[25px] w-[670px]">
+            <div className="flex flex-col gap-[25px]">
+              <input className={`${FIELD} h-[53px]`} placeholder="Имя*" required />
+              <input className={`${FIELD} h-[53px]`} placeholder="Номер*" type="tel" required />
+              <input className={`${FIELD} h-[53px]`} placeholder="Почта*" type="email" required />
             </div>
             <textarea
               placeholder="Расскажите о вашем проекте"
-              className={`${FIELD} w-[322px] h-[209px] min-h-[209px] resize-none leading-[140%]`}
+              className={`${FIELD} h-full min-h-[209px] resize-none leading-[140%]`}
             />
           </div>
         </div>

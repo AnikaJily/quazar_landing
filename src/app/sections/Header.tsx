@@ -1,13 +1,27 @@
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { PillButton } from "../components/PillButton";
 import { ArrowIcon } from "../components/ArrowIcon";
 
-const NAV = ["Главная", "Услуги", "Направления", "Контакты"];
+const NAV = ["Главная", "Направления", "Продукты", "Кейсы", "Услуги"];
 
 export function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md">
-      <div className="w-[1152px] mx-auto flex items-center justify-between py-[30px]">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 h-[70px] flex items-center transition-colors duration-300 ${
+        scrolled ? "bg-[#030303]/85 backdrop-blur-md" : "bg-transparent"
+      }`}
+    >
+      <div className="w-[1152px] mx-auto flex items-center justify-between">
         <div className="flex gap-[50px] items-center">
           <a href="#" className="flex gap-[7px] items-center">
             <div className="bg-white rounded-[8.75px] size-[28px]" />

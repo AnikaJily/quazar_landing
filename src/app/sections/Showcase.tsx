@@ -12,7 +12,7 @@ export interface ShowcaseItem {
 }
 
 const CARD_W = 500;
-const GAP = 46;
+const GAP = 50;
 const VISIBLE = 2;
 
 function Card({ title, description, image = imgPhoneProduct }: ShowcaseItem) {
