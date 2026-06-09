@@ -86,11 +86,11 @@ vec2 distortUV(vec2 uv) {
   float aspectRatio = uResolution.x / uResolution.y;
   vec2 pos = vec2(0.5, 0.48014727);
   float d = easeInOutCirc(max(0.0,
-    1.0 - distance(uv * vec2(aspectRatio, 1.0), pos * vec2(aspectRatio, 1.0)) * 4.0 * 0.75));
+    1.0 - distance(uv * vec2(aspectRatio, 1.0), pos * vec2(aspectRatio, 1.0)) * 4.0 * 1.0));
   if (d <= 0.001) return uv;
   vec2 skew = mix(vec2(1.0), vec2(1.0, 0.0), 0.4);
   vec2 st = (uv - pos) * vec2(aspectRatio, 1.0) * 50.0 * 0.568;
-  st = st * rot(0.5238 * 2.0 * PI) * skew;
+  st = st * rot(0.1269 * 2.0 * PI) * skew;
   vec2 m = voronoiFBM(st);
   vec2 offset = (m * 0.2 * 0.5 * 2.0) - (0.5 * 0.2);
   return uv + offset * d;
@@ -260,6 +260,9 @@ function deleteFBO(gl: WebGL2RenderingContext, f: FBO) {
 
 // ---- Component ----
 
+const SHADER_FONT_FAMILY = "Manrope, sans-serif";
+const SHADER_FONT_WEIGHT = 600;
+
 export function KvazarShader({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -274,7 +277,9 @@ export function KvazarShader({ className }: { className?: string }) {
     });
     if (!gl) return;
 
-    const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // quad VAO
     const vao = gl.createVertexArray()!;
@@ -323,7 +328,7 @@ export function KvazarShader({ className }: { className?: string }) {
       textCtx.clearRect(0, 0, w, h);
       const fontPx = Math.round(0.06 * w);
       textCtx.fillStyle = "#9D9D9D";
-      textCtx.font = `${fontPx}px "Departure Mono", "JetBrains Mono", "Space Mono", monospace`;
+      textCtx.font = `${SHADER_FONT_WEIGHT} ${fontPx}px ${SHADER_FONT_FAMILY}`;
       textCtx.textAlign = "center";
       textCtx.textBaseline = "middle";
       if ("letterSpacing" in textCtx)
@@ -352,6 +357,7 @@ export function KvazarShader({ className }: { className?: string }) {
       buildTextTexture();
     }
     resize();
+    void document.fonts.load(`${SHADER_FONT_WEIGHT} 16px ${SHADER_FONT_FAMILY}`).then(buildTextTexture);
     document.fonts.ready.then(buildTextTexture);
 
     const ro = new ResizeObserver(resize);
@@ -382,24 +388,54 @@ export function KvazarShader({ className }: { className?: string }) {
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
-    // speeds match original Unicorn Studio (beam=0 → static, grain=0 → static)
+  
     const SPEEDS = { replicate: 0.08, shatter: 1.0, beam: 0, grain: 0 };
     const t0 = performance.now();
-    let rafId: number;
+    let rafId = 0;
+    let inView = false;
+    let tabVisible = document.visibilityState === "visible";
 
-    function frame() {
+    function render() {
       const t = (performance.now() - t0) / 1000 * 60; // UnicornStudio time unit
-      pass(progReplicate, textTex,  fboA, t * SPEEDS.replicate);
-      pass(progShatter,   fboA.tex, fboB, t * SPEEDS.shatter);
-      pass(progBeam,      fboB.tex, fboC, t * SPEEDS.beam);
-      pass(progGrain,     fboC.tex, fboA, t * SPEEDS.grain);
-      pass(progVignette,  fboA.tex, null, 0);
-      rafId = requestAnimationFrame(frame);
+      pass(progReplicate, textTex, fboA, t * SPEEDS.replicate);
+      pass(progShatter, fboA.tex, fboB, t * SPEEDS.shatter);
+      pass(progBeam, fboB.tex, fboC, t * SPEEDS.beam);
+      pass(progGrain, fboC.tex, fboA, t * SPEEDS.grain);
+      pass(progVignette, fboA.tex, null, 0);
     }
-    frame();
+
+    function loop() {
+      render();
+      rafId = requestAnimationFrame(loop);
+    }
+
+    function updateLoop() {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+      if (!inView || !tabVisible) return;
+      render();
+      if (!reducedMotion) rafId = requestAnimationFrame(loop);
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        updateLoop();
+      },
+      { rootMargin: "80px", threshold: 0 },
+    );
+    io.observe(canvas);
+
+    const onVisibility = () => {
+      tabVisible = document.visibilityState === "visible";
+      updateLoop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       cancelAnimationFrame(rafId);
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
       ro.disconnect();
       deleteFBO(gl, fboA);
       deleteFBO(gl, fboB);

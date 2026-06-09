@@ -1,3 +1,4 @@
+import heroPoster from "figma:asset/hero-poster.jpg";
 import { KvazarShader } from "../components/KvazarShader";
 import { Header } from "./Header";
 import { PillButton } from "../components/PillButton";
@@ -6,7 +7,10 @@ import { ArrowIcon } from "../components/ArrowIcon";
 export function Hero() {
   return (
     <section className="relative w-full h-[796px]">
-      <div className="absolute left-1/2 -translate-x-1/2 top-0 h-[820px] w-[1512px] pointer-events-none mix-blend-screen z-10">
+      <div
+        className="absolute left-1/2 -translate-x-1/2 top-0 h-[820px] w-[1512px] pointer-events-none mix-blend-screen z-10 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroPoster})` }}
+      >
         <KvazarShader className="absolute inset-0 size-full" />
       </div>
 

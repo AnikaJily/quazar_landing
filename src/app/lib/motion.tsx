@@ -6,8 +6,8 @@ export const hoverLift = {
 } as const;
 
 export const hoverScale = {
-  whileHover: { scale: 1.05, transition: { type: "spring", stiffness: 400, damping: 20 } },
-  whileTap: { scale: 0.95 },
+  whileHover: { scale: 1.02, transition: { type: "spring", stiffness: 260, damping: 22 } },
+  whileTap: { scale: 0.97 },
 } as const;
 
 // AGIMA-style premium easing — fast start, gentle settle (easeOutCirc-ish)

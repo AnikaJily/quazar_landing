@@ -5,21 +5,18 @@ import { cn } from "../lib/cn";
 import { hoverScale } from "../lib/motion";
 
 const pill = cva(
-  "inline-flex items-center justify-center rounded-[40px] whitespace-nowrap select-none cursor-pointer font-['Inter:Regular',sans-serif] font-normal leading-[99.915%]",
+  "group inline-flex items-center justify-center rounded-[40px] whitespace-nowrap select-none cursor-pointer font-['Inter:Regular',sans-serif] font-normal leading-[99.915%]",
   {
     variants: {
       tone: {
         light: "bg-white text-[#030303]",
         dark: "bg-[#030303] text-white",
-        glass: "bg-white/15 backdrop-blur-sm text-white",
-        glassMuted: "bg-white/15 backdrop-blur-sm text-[#d8dae2]",
-        tag: "bg-[#e6ebf5] text-[#030303]",
+        glass: "bg-white/15 backdrop-blur-sm text-white border border-white/20",
+        glassMuted: "bg-white/15 backdrop-blur-sm text-[#b9b9b9] border border-white/20",
       },
       size: {
-        sm: "px-[15px] py-[12px] text-[14px] tracking-[-0.56px] gap-[10px]",
-        md: "px-[22px] py-[15px] text-[16px] tracking-[-0.64px] gap-[10px]",
-        team: "px-[22px] py-[15px] text-[25px] tracking-[-1px] gap-[15px]",
-        tag: "px-[15px] py-[12px] text-[16px] tracking-[-0.64px]",
+        sm: "px-[12px] py-[9px] text-[14px] tracking-[-0.56px] gap-[6px]",
+        md: "px-[16px] py-[11px] text-[16px] tracking-[-0.64px] gap-[7px]",
       },
     },
     defaultVariants: { tone: "light", size: "md" },
@@ -31,7 +28,6 @@ type Variants = VariantProps<typeof pill>;
 export interface PillButtonProps extends Variants {
   children: ReactNode;
   trailing?: ReactNode;
-  leading?: ReactNode;
   as?: "button" | "a";
   href?: string;
   className?: string;
@@ -42,7 +38,6 @@ export interface PillButtonProps extends Variants {
 export function PillButton({
   children,
   trailing,
-  leading,
   as = "button",
   className,
   ...rest
@@ -56,11 +51,12 @@ export function PillButton({
       href={rest.href}
       onClick={rest.onClick}
     >
-      {leading}
-      <span className="[text-box-edge:cap_alphabetic] [text-box-trim:trim-both]">
-        {children}
-      </span>
-      {trailing}
+      {children}
+      {trailing && (
+        <span className="inline-flex transition-transform duration-300 ease-out group-hover:translate-x-[3px]">
+          {trailing}
+        </span>
+      )}
     </Tag>
   );
 }

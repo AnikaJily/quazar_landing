@@ -38,7 +38,9 @@ function LightPanel() {
         className="absolute left-[121px] top-[297px] w-[1281px] h-[154px] bg-[#a3b2d4] blur-[192.5px] pointer-events-none"
       />
       <div className="relative z-10 w-full flex flex-col gap-[180px] items-start">
-        <Directions />
+        <div id="directions" className="section-anchor w-full">
+          <Directions />
+        </div>
         <div className="w-full">
           <Team />
         </div>
@@ -50,8 +52,12 @@ function LightPanel() {
 function DarkShowcaseStack() {
   return (
     <div className="flex flex-col gap-[100px] items-start w-full px-[180px] pt-[100px] pb-[100px]">
-      <Showcase title="Наши продукты" items={PRODUCTS} />
-      <Showcase title="Кейсы" items={CASES} />
+      <div id="products" className="section-anchor w-full">
+        <Showcase title="Наши продукты" items={PRODUCTS} />
+      </div>
+      <div id="cases" className="section-anchor w-full">
+        <Showcase title="Кейсы" items={CASES} />
+      </div>
       <Clients />
     </div>
   );
@@ -69,7 +75,9 @@ function CycleAndForm() {
         style={{ top: 815 }}
       />
       <div className="relative z-10 flex flex-col gap-[100px] items-center w-full">
-        <Cycle />
+        <div id="services" className="section-anchor w-full flex justify-center">
+          <Cycle />
+        </div>
         <ContactForm />
       </div>
     </div>
@@ -80,7 +88,9 @@ export default function App() {
   return (
     <div className="bg-[#030303] relative w-full min-h-screen overflow-x-hidden">
       <div className="relative flex flex-col items-stretch w-[1512px] mx-auto">
-        <Hero />
+        <div id="hero" className="section-anchor">
+          <Hero />
+        </div>
         <LightPanel />
         <DarkShowcaseStack />
         <CycleAndForm />

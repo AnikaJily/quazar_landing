@@ -3,21 +3,27 @@ import { motion } from "motion/react";
 import imgPhoneProduct from "figma:asset/phone-product.png";
 import { SectionTitle } from "../components/SectionTitle";
 import { ArrowIcon } from "../components/ArrowIcon";
-import { hoverScale, Wave } from "../lib/motion";
+import { hoverLift, hoverScale, Wave } from "../lib/motion";
 
 export interface ShowcaseItem {
   title: string;
   description: string;
   image?: string;
+  href?: string;
 }
 
 const CARD_W = 500;
 const GAP = 50;
 const VISIBLE = 2;
 
-function Card({ title, description, image = imgPhoneProduct }: ShowcaseItem) {
+function Card({ title, description, image = imgPhoneProduct, href = "#" }: ShowcaseItem) {
   return (
-    <div className="flex flex-col gap-[27px] items-end shrink-0" style={{ width: CARD_W }}>
+    <motion.a
+      href={href}
+      className="flex flex-col gap-[27px] items-end shrink-0 cursor-pointer"
+      style={{ width: CARD_W }}
+      {...hoverLift}
+    >
       <div className="size-[500px] rounded-[15px] overflow-hidden bg-[#1a1d24] relative">
         <img alt="" src={image} className="absolute inset-0 size-full object-cover" />
       </div>
@@ -25,11 +31,11 @@ function Card({ title, description, image = imgPhoneProduct }: ShowcaseItem) {
         <p className="font-['Manrope:ExtraBold',sans-serif] font-extrabold text-white text-[25px] leading-[99.9%]">
           {title}
         </p>
-        <p className="font-['Inter:Regular',sans-serif] text-[#b6bad3] text-[18px] tracking-[-0.72px] leading-[140%]">
+        <p className="font-['Inter:Regular',sans-serif] text-[#b9b9b9] text-[18px] tracking-[-0.72px] leading-[140%]">
           {description}
         </p>
       </div>
-    </div>
+    </motion.a>
   );
 }
 
@@ -98,7 +104,7 @@ export function Showcase({
           </div>
         </div>
       </Wave>
-      <div className="relative overflow-hidden -mr-[360px]">
+      <div className="relative -mr-[360px] overflow-hidden pt-[6px] -mt-[6px]">
         <motion.div
           className="flex"
           style={{ gap: GAP }}

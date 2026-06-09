@@ -42,8 +42,8 @@ const CARDS: CycleCardData[] = [
           transition={{
             duration: 1.4,
             ease: [0.22, 0.61, 0.36, 1],
-            delay: 0.25,
-            opacity: { duration: 0.4, ease: "easeOut", delay: 0.25 },
+            delay: 0.55,
+            opacity: { duration: 0.4, ease: "easeOut", delay: 0.55 },
           }}
         />
       </div>
@@ -76,8 +76,8 @@ const CARDS: CycleCardData[] = [
           transition={{
             duration: 1.4,
             ease: [0.22, 0.61, 0.36, 1],
-            delay: 0.65,
-            opacity: { duration: 0.4, ease: "easeOut", delay: 0.65 },
+            delay: 0.95,
+            opacity: { duration: 0.4, ease: "easeOut", delay: 0.95 },
           }}
         />
       </div>
