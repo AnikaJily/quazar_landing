@@ -75,6 +75,9 @@ html {
   animation-play-state: running;
 }
 
+/* Starfield styles live in app/starfield/starfield.css (imported by the
+   Starfield component), so the module is self-contained. */
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

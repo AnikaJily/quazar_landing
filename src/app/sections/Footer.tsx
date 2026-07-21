@@ -3,13 +3,15 @@ import imgVkIcon from "figma:asset/vk-icon.svg";
 import imgTelegramIcon from "figma:asset/telegram-icon.svg";
 import { PillButton } from "../components/PillButton";
 import { ArrowIcon } from "../components/ArrowIcon";
+import { Starfield, FOOTER_STARFIELD_CONFIG } from "../starfield";
 import { hoverScale } from "../lib/motion";
 import { NAV_ITEMS } from "../lib/nav";
 
 export function Footer() {
   return (
     <footer className="bg-[#030303] w-full pt-[100px] pb-[100px] relative">
-      <div className="w-[1152px] mx-auto">
+      <Starfield config={FOOTER_STARFIELD_CONFIG} className="z-0" />
+      <div className="relative z-10 w-[1152px] mx-auto">
         <div className="flex justify-between items-start">
           <nav className="flex flex-col gap-[15px] font-['Inter:Regular',sans-serif] text-white text-[16px] tracking-[-0.64px]">
             {NAV_ITEMS.map((item) => (

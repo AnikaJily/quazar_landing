@@ -7,6 +7,7 @@ import { Clients } from "./sections/Clients";
 import { Cycle } from "./sections/Cycle";
 import { ContactForm } from "./sections/ContactForm";
 import { Footer } from "./sections/Footer";
+import { StarfieldConfigProvider, StarfieldTuner } from "./starfield";
 
 const PRODUCTS: ShowcaseItem[] = [
   { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
@@ -86,16 +87,19 @@ function CycleAndForm() {
 
 export default function App() {
   return (
-    <div className="bg-[#030303] relative w-full min-h-screen overflow-x-hidden">
-      <div className="relative flex flex-col items-stretch w-[1512px] mx-auto">
-        <div id="hero" className="section-anchor">
-          <Hero />
+    <StarfieldConfigProvider>
+      <div className="bg-[#030303] relative w-full min-h-screen overflow-x-hidden">
+        <div className="relative flex flex-col items-stretch w-[1512px] mx-auto">
+          <div id="hero" className="section-anchor">
+            <Hero />
+          </div>
+          <LightPanel />
+          <DarkShowcaseStack />
+          <CycleAndForm />
+          <Footer />
         </div>
-        <LightPanel />
-        <DarkShowcaseStack />
-        <CycleAndForm />
-        <Footer />
       </div>
-    </div>
+      {import.meta.env.DEV && <StarfieldTuner />}
+    </StarfieldConfigProvider>
   );
 }
