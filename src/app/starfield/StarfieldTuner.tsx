@@ -8,10 +8,9 @@ import {
 } from "./starfieldConfig";
 
 /**
- * StarfieldTuner — a live control panel for the hero starfield.
- * Only renders when the page is opened with `?tune`. Adjust the sliders and the
- * sky updates in real time; Export the JSON, send it back, and it becomes the
- * new default. Never shown to normal visitors.
+ * StarfieldTuner — live-панель для звёздного поля hero.
+ * Рендерится только при `?tune`: правки применяются сразу, экспорт JSON даёт
+ * новый дефолт. Обычным посетителям не показывается.
  */
 
 type NumKey = {
@@ -28,15 +27,15 @@ interface SliderSpec {
 
 interface Group {
   title: string;
-  open?: boolean; // whether the group starts expanded (default true)
+  open?: boolean; // раскрыта ли группа по умолчанию (по умолч. true)
   sliders?: SliderSpec[];
   colors?: { key: keyof StarfieldConfig; label: string }[];
   toggles?: { key: keyof StarfieldConfig; label: string }[];
   seed?: boolean;
 }
 
-// Only the essentials show by default; everything fine-grained lives in the
-// collapsed "Ещё · …" groups so the panel stays clean.
+// По умолчанию видно только главное; тонкая настройка — в свёрнутых
+// группах «Ещё · …», чтобы панель не захламлять.
 const GROUPS: Group[] = [
   {
     title: "Звёзды",
@@ -193,7 +192,7 @@ export function StarfieldTuner() {
 
   return (
     <div className="fixed right-4 top-4 bottom-4 z-[9999] flex w-[330px] flex-col overflow-hidden rounded-2xl bg-[#0b0c12]/95 text-white shadow-2xl ring-1 ring-white/12 backdrop-blur-md">
-      {/* Header */}
+      {/* Шапка */}
       <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="text-[13px] font-semibold tracking-tight">✦ Starfield Tuner</span>
@@ -207,7 +206,7 @@ export function StarfieldTuner() {
         </button>
       </div>
 
-      {/* Controls */}
+      {/* Контролы */}
       <div className="flex-1 overflow-y-auto px-4 py-3">
         {GROUPS.map((g) => (
           <details key={g.title} open={g.open ?? true} className="group mb-2 border-b border-white/5 pb-2">
@@ -283,7 +282,7 @@ export function StarfieldTuner() {
         ))}
       </div>
 
-      {/* Footer actions */}
+      {/* Действия в подвале */}
       <div className="border-t border-white/10 px-4 py-3">
         <div className="grid grid-cols-2 gap-2">
           <button type="button" onClick={exportJSON} className={`${btn} bg-[#979efe] text-[#0b0c12] hover:bg-[#a9aeff]`}>
@@ -321,5 +320,5 @@ export function StarfieldTuner() {
   );
 }
 
-/** Convenience: the default config, handy if you want a "compare to default" later. */
+/** Для удобства: дефолтный конфиг — пригодится для «сравнить с дефолтом». */
 export { DEFAULT_STARFIELD_CONFIG };

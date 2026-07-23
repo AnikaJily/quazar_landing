@@ -1,19 +1,18 @@
 /**
- * SHADER_BEAM — the single source of truth for the quasar beam's line.
+ * SHADER_BEAM — единый источник правды для линии луча квазара.
  * ---------------------------------------------------------------------------
- * These are the raw params of the beam drawn by the WebGL shader (`drawLine`
- * inside FS_BEAM in `KvazarShader.tsx`). BOTH sides read them from here:
- *   - `KvazarShader.tsx` interpolates them straight into the GLSL string;
- *   - `starfield/beamGeometry.ts` derives its screen-space `BEAM` from them,
- *     so the starfield keeps its stars off the beam automatically.
+ * Сырые параметры луча, который рисует WebGL-шейдер (`drawLine` в FS_BEAM
+ * из `KvazarShader.tsx`). Отсюда их читают обе стороны:
+ *   - `KvazarShader.tsx` подставляет их прямо в GLSL-строку;
+ *   - `starfield/beamGeometry.ts` выводит из них экранный `BEAM`,
+ *     чтобы starfield сам держал звёзды в обходе луча.
  *
- * Change the beam's position or angle? Edit it ONCE here — the shader and the
- * starfield's keep-out both follow. (Previously these numbers were copied by
- * hand into two places and drifted silently.)
+ * Правишь позицию/угол — правь ЗДЕСЬ один раз: шейдер и коридор starfield
+ * подхватят. (Раньше числа копировались руками и молча расходились.)
  */
 export const SHADER_BEAM = {
-  cx: 0.49556, // center x, in uv space (0..1)
-  cy: 0.48547, // center y, in uv space (y-up)
-  scale: 0.542, // beam length/falloff
-  angle: -0.1269, // rotation, in turns (× 2π = radians)
+  cx: 0.49556, // центр x, uv-пространство (0..1)
+  cy: 0.48547, // центр y, uv-пространство (y вверх)
+  scale: 0.542, // длина/спад луча
+  angle: -0.1269, // поворот в оборотах (× 2π = радианы)
 };

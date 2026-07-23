@@ -1,6 +1,6 @@
-// Public API of the starfield module. Import from "../starfield" — internals
+// Публичный API модуля starfield. Импортируй из "../starfield" — внутренности
 // (buildField, placeCenters, mulberry32, beamGeometry, StarfieldTuner GROUPS)
-// stay private.
+// остаются приватными.
 export { Starfield } from "./Starfield";
 export type { StarfieldProps } from "./Starfield";
 export { StarfieldTuner } from "./StarfieldTuner";

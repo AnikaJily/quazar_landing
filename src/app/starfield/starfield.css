@@ -1,17 +1,16 @@
-/* ── Starfield: "Cartographer's echo" ──────────────────────────────────────
-   Styles + keyframes for the <Starfield> component (imported by Starfield.tsx).
-   Compositor-only motion (opacity / transform only). Values come from React as
-   CSS custom properties:
-     · root wrapper: --sf-*   (shared: twinkle-peak/scale, glow-*, flare-dur, node-*)
-     · per star:     --kvz-*  (tone / base / peak / dur / delay)
-   Each var() carries a fallback that mirrors its config default — keep them in
-   sync with starfieldConfig.tsx if you change semantics. Two exceptions:
-   --sf-glow-tone falls back to a var() chain (--kvz-tone), and --sf-flare-dur
-   holds flarePeriod/speed (already divided by speed), not the raw period. */
+/* ── Starfield: «эхо картографа» ──────────────────────────────────────
+   Стили и keyframes для <Starfield> (импорт в Starfield.tsx).
+   Анимация только на compositor (opacity / transform). Значения приходят из React
+   как CSS-переменные:
+     · корень:   --sf-*   (общие: twinkle-peak/scale, glow-*, flare-dur, node-*)
+     · звезда:   --kvz-*  (tone / base / peak / dur / delay)
+   fallback в каждом var() дублирует дефолт конфига — держи в синхроне с
+   starfieldConfig.tsx. Два исключения: --sf-glow-tone уходит в цепочку var()
+   (--kvz-tone), а --sf-flare-dur хранит уже поделённый на speed период. */
 
 .kvz-star {
-  /* Soft round glow via layered radial-gradient — no box-shadow spread, so it
-     stays cheap and never smears against light content at zone edges. */
+  /* Мягкое свечение через radial-gradient, без разгона box-shadow —
+     дёшево и не мажет по светлому контенту у краёв зоны. */
   --kvz-tone: 255, 255, 255;
   --kvz-base: 0.2;
   background: radial-gradient(
@@ -24,8 +23,8 @@
   transform: translate(-50%, -50%);
 }
 
-/* Twinkle: a gentle swell in opacity + a whisper of scale, on the house easing.
-   The star spends most of its cycle near base and only briefly reaches peak. */
+/* Мерцание: лёгкий всплеск opacity и чуть scale. Звезда почти весь цикл
+   держится у base и лишь ненадолго доходит до peak. */
 @keyframes kvz-twinkle {
   0%,
   100% {
@@ -38,15 +37,15 @@
   }
 }
 
-/* Twinkle & flare share the same gentle swell (opacity + a whisper of scale)
-   and the same soft halo. Flare is rare and adds a 4-point cross sparkle via the
-   ::before below. --kvz-dur is always set from JS, so its fallback never applies. */
+/* Мерцание и вспышка делят один всплеск (opacity + чуть scale) и один нимб.
+   Вспышка редкая и добавляет крестик через ::before ниже.
+   --kvz-dur всегда задаётся из JS, так что fallback не срабатывает. */
 .kvz-star--twinkle,
 .kvz-star--flare {
   animation: kvz-twinkle var(--kvz-dur, 10s)
     cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
   animation-delay: var(--kvz-delay, 0s);
-  /* A soft halo so the shining stars read as points of light, not flat dots. */
+  /* Мягкий нимб, чтобы светящиеся звёзды читались как точки света, а не плоские точки. */
   box-shadow: 0 0 var(--sf-glow-blur, 6px) 0.5px
     rgba(var(--sf-glow-tone, var(--kvz-tone)), var(--sf-glow-alpha, 0.5));
   will-change: opacity, transform;
@@ -96,8 +95,8 @@
   }
 }
 
-/* Pleiades nodes: brighter than field stars, breathing on one slow shared
-   period. A tiny periwinkle box-shadow gives the cluster its quiet communal glow. */
+/* Узлы Плеяд: ярче обычных звёзд, дышат на одном общем медленном периоде.
+   Лёгкий сиреневый box-shadow даёт скоплению общее тихое свечение. */
 .kvz-star--node {
   --kvz-tone: 195, 208, 243;
   background: radial-gradient(
@@ -127,7 +126,7 @@
   }
 }
 
-/* Reflection-nebula haze around the Pleiades cluster — soft, blurred, still. */
+/* Дымка отражательной туманности вокруг Плеяд — мягкая, размытая, статичная. */
 .kvz-nebula {
   transform: translate(-50%, -50%);
   border-radius: 50%;
@@ -135,11 +134,10 @@
   pointer-events: none;
 }
 
-/* Freeze the star chart to a tasteful, legible still-frame — nothing moves.
-   Twinkling stars settle slightly above base so the sky still reads as "lit";
-   nodes hold mid-bright so the constellation stays legible; the flare cross is
-   forced invisible so no sparkle is stuck mid-bloom. The calc() math mirrors the
-   config defaults — update it if config semantics change. */
+/* Замораживаем карту в аккуратный статичный кадр — ничего не движется.
+   Мерцающие звёзды чуть выше base, чтобы небо читалось «освещённым»; узлы держат
+   среднюю яркость ради читаемости созвездия; крестик вспышки скрыт, чтобы не
+   застыл в цвету. Формулы calc() дублируют дефолты конфига — правь при их смене. */
 @media (prefers-reduced-motion: reduce) {
   .kvz-star--twinkle,
   .kvz-star--flare,

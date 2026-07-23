@@ -10,33 +10,30 @@ import {
 import "./starfield.css";
 
 /**
- * Starfield — "Cartographer's echo"
+ * Starfield — звёздный фон hero (зона с шейдером квазара).
  * ---------------------------------------------------------------------------
- * A luxury star-chart backdrop for the hero (the one zone carrying the quasar
- * shader). Fully driven by StarfieldConfig; all animation is parameterised via
- * CSS custom properties so the live tuner (`?tune`) can adjust it in real time.
+ * Полностью задаётся StarfieldConfig; анимация — через CSS-переменные, чтобы
+ * live-тюнер (`?tune`) правил её в реальном времени.
  *
- * The field is generated in TWO independent seeded passes:
- *  - Pass 1 (positions): consumes only the layout knobs, so tuning brightness,
- *    colour, twinkle or flares never reshuffles the sky.
- *  - Pass 2 (styling): a separate seeded stream assigns twinkle / flare / tone /
- *    opacity via reservoir selection, so the fraction sliders are linear and the
- *    flare count is realised exactly (never lost to an unlucky seed).
+ * Поле строится в ДВУХ независимых сид-проходах:
+ *  - Проход 1 (позиции): зависит только от layout — правка яркости/цвета/
+ *    мерцания/вспышек не пересобирает небо.
+ *  - Проход 2 (стилизация): отдельный поток, назначает мерцание/вспышку/тон/
+ *    opacity через reservoir-выбор → слайдеры-доли линейны, число вспышек точно.
  *
- * The Pleiades is rendered as a real open star cluster (M45): a tight group of
- * bright blue-white stars of varying magnitude wrapped in a soft reflection-
- * nebula haze — no connecting lines by default.
+ * Плеяды — реальное рассеянное скопление (M45): плотная группа ярких бело-
+ * голубых звёзд разной величины в дымке отражательной туманности, без линий.
  *
- * Compositor-only motion (opacity + transform); glow via radial-gradient + a
- * static box-shadow. pointer-events:none, aria-hidden. Freezes tastefully under
- * prefers-reduced-motion (handled in ./starfield.css).
+ * Только композиторная анимация (opacity + transform); свечение — radial-
+ * gradient + статичный box-shadow. pointer-events:none, aria-hidden. Замирает
+ * под prefers-reduced-motion (см. ./starfield.css).
  *
- * REQUIRES: a <StarfieldConfigProvider> ancestor (falls back to
- * DEFAULT_STARFIELD_CONFIG otherwise) and ./starfield.css (imported below).
- * Beam geometry lives in ./beamGeometry (coupled to KvazarShader — see there).
+ * ТРЕБУЕТ: предка <StarfieldConfigProvider> (иначе fallback на
+ * DEFAULT_STARFIELD_CONFIG) и ./starfield.css. Геометрия луча — в ./beamGeometry
+ * (связана с KvazarShader).
  */
 
-// ── Seeded PRNG ──────────────────────────────────────────────────────────────
+// ── Сид-PRNG ──────────────────────────────────────────────────────────────
 function mulberry32(seed: number) {
   let a = seed >>> 0;
   return function () {
@@ -50,13 +47,13 @@ function mulberry32(seed: number) {
 
 type StarTone = "white" | "soft" | "beam";
 
-const NODE_PERIOD = 12; // seconds
-const TWINKLE_BASE = 5; // seconds — shared twinkle period (scaled by speed)
+const NODE_PERIOD = 12; // с
+const TWINKLE_BASE = 5; // с — общий период мерцания (масштабируется speed)
 
-// Field-star size mix, keyed off a uniform 0..1 roll: the rare large star, the
-// occasional mid, the common small pinpoint.
-const SIZE_LARGE_ABOVE = 0.94; // top ~6% of stars are large
-const SIZE_MID_ABOVE = 0.78; // next ~16% are mid, the rest small
+// Смесь размеров звёзд по броску 0..1: редкая крупная, изредка средняя,
+// обычно мелкая точка.
+const SIZE_LARGE_ABOVE = 0.94; // верхние ~6% — крупные
+const SIZE_MID_ABOVE = 0.78; // следующие ~16% — средние, остальные мелкие
 
 interface Star {
   x: number; // %
@@ -66,20 +63,20 @@ interface Star {
   tone: StarTone;
   twinkles: boolean;
   flares: boolean;
-  peak: number; // per-star twinkle amplitude (opacity added at peak)
-  duration: number; // s
-  delay: number; // s (negative → desynced)
+  peak: number; // амплитуда мерцания звезды (прибавка opacity на пике)
+  duration: number; // с
+  delay: number; // с (отрицательный → рассинхрон)
 }
 
-// ── Field generation (two independent seeded passes) ─────────────────────────
-// heroFraction: the top fraction of the (possibly taller) container that is the
-// beam-bearing hero. <1 when the field bleeds below the hero into the gap so it
-// tucks under the next section — beam geometry is only applied in that top part.
+// ── Генерация поля (два независимых сид-прохода) ─────────────────────────
+// heroFraction: верхняя доля контейнера, занятая hero с лучом. <1, когда поле
+// «подтекает» ниже hero в стык со следующей секцией — геометрия луча действует
+// только в этой верхней части.
 function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
   const count = Math.max(1, Math.round(c.count));
   const speed = c.speed > 0 ? c.speed : 1;
 
-  // Pass 1 — positions. Depend ONLY on layout knobs, never on look knobs.
+  // Проход 1 — позиции. Зависят ТОЛЬКО от layout, не от look-параметров.
   const rndPos = mulberry32(c.seed);
   const positions: { x: number; y: number }[] = [];
   let guard = 0;
@@ -96,7 +93,7 @@ function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
       };
       x01 = pull(x01);
       y01 = pull(y01);
-      // Map to hero space for the beam keep-out; below the hero there's no beam.
+      // В координаты hero для обхода луча; ниже hero луча нет.
       const yHero = y01 / heroFraction;
       if (yHero <= 1 && (distToBeam(x01, yHero) < c.corridor || inCore(x01, yHero))) continue;
     }
@@ -113,8 +110,8 @@ function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
     positions.push({ x: x01, y: y01 });
   }
 
-  // Pass 2 — styling. Separate stream; budgets realised exactly via reservoir
-  // selection so sliders are linear and flares are never lost to the seed.
+  // Проход 2 — стилизация. Отдельный поток; бюджеты реализуются точно через
+  // reservoir-выбор → слайдеры линейны, вспышки не теряются из-за сида.
   const rndStyle = mulberry32((c.seed ^ 0x9e3779b9) >>> 0);
   const n = positions.length;
   const clampB = (x: number) => Math.max(0, Math.min(n, Math.round(x)));
@@ -125,8 +122,8 @@ function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
 
   const staticSpan = Math.max(0, c.staticOpacityMax - c.staticOpacityMin);
   const twinkleSpan = Math.max(0, c.twinkleOpacityMax - c.twinkleOpacityMin);
-  // One shared period → every star twinkles at the SAME speed; only the phase
-  // is randomised (per star below), so they sparkle out of step, never in unison.
+  // Общий период → все звёзды мерцают с ОДНОЙ скоростью; рандомна лишь фаза
+  // (у каждой ниже), поэтому вспыхивают вразнобой, не в унисон.
   const twinklePeriod = TWINKLE_BASE / speed;
 
   let remStars = n;
@@ -137,8 +134,8 @@ function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
     const size =
       sr > SIZE_LARGE_ABOVE ? c.sizeLarge : sr > SIZE_MID_ABOVE ? c.sizeMid : c.sizeSmall;
 
-    // Twinkle and flare are independent reservoir picks over the same pool — a
-    // star can both twinkle AND flash a cross — and both counts land exactly.
+    // Мерцание и вспышка — независимые reservoir-выборки из общего пула: звезда
+    // может и мерцать, И давать крестик; оба счётчика сходятся точно.
     const twinkles = remStars > 0 && rndStyle() < twBudget / remStars;
     if (twinkles) twBudget--;
     const flares = remStars > 0 && rndStyle() < flBudget / remStars;
@@ -168,24 +165,23 @@ function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
       tone,
       twinkles,
       flares,
-      // Per-star amplitude jitter — some stars shimmer strongly, others barely.
+      // Джиттер амплитуды: одни звёзды мерцают сильно, другие едва.
       peak: c.twinklePeakBoost * (0.6 + rndStyle() * 0.8),
       duration: twinklePeriod,
-      // Random phase across the full cycle → same speed, never in unison.
+      // Случайная фаза по всему циклу → та же скорость, но не в унисон.
       delay: -+(rndStyle() * twinklePeriod).toFixed(2),
     };
   });
 }
 
-// ── Pleiades clusters (procedural open clusters, M45-style) ──────────────────
-// Each cluster is a tight group of bright blue-white stars of varying magnitude
-// wrapped in a soft reflection-nebula haze — no connecting lines, like the real
-// thing. `pleiadesCount` clusters × `pleiadesStars` stars each. The first cluster
-// is anchored to the hero's clear top-right corner; any extras are placed by a
-// seeded sampler into other dark, beam-free zones with a minimum separation.
+// ── Скопления Плеяд (процедурные рассеянные, в духе M45) ──────────────────
+// Скопление — плотная группа ярких бело-голубых звёзд разной величины в дымке
+// отражательной туманности, без линий. `pleiadesCount` скоплений × `pleiadesStars`
+// звёзд. Центры раскладывает сид-сэмплер по тёмным зонам без луча с минимальным
+// разделением.
 
-const CLUSTER_RADIUS_BASE = 3.3; // % of container at spread 1
-const NEBULA_PX_PER_RADIUS = 58; // haze diameter in px per unit of cluster radius (%)
+const CLUSTER_RADIUS_BASE = 3.3; // % контейнера при spread 1
+const NEBULA_PX_PER_RADIUS = 58; // диаметр дымки, px на единицу радиуса (%)
 
 interface ClusterNode {
   x: number;
@@ -198,15 +194,15 @@ interface Cluster {
   nodes: ClusterNode[];
 }
 
-// Cluster centres, in HERO % (0..100). Placed to HUG the diagonal beam: near it
-// but off its bright core, on either side, scattered along its length.
+// Центры скоплений в % hero (0..100). Жмутся к диагональному лучу: рядом с ним,
+// но вне яркого ядра, по обе стороны и вдоль всей длины.
 function placeCenters(c: StarfieldConfig): { x: number; y: number }[] {
   const wanted = Math.max(0, Math.min(6, Math.round(c.pleiadesCount)));
   if (wanted === 0) return [];
   const centers: { x: number; y: number }[] = [];
   const rnd = mulberry32((c.seed ^ 0x00c0ffee) >>> 0);
   let guard = 0;
-  let band = 0.14; // max perpendicular distance from the beam → hugs the diagonal
+  let band = 0.14; // макс. перпендикуляр от луча → держится у диагонали
   let minSep = 16;
   while (centers.length < wanted && guard < 3000) {
     guard++;
@@ -217,7 +213,7 @@ function placeCenters(c: StarfieldConfig): { x: number; y: number }[] {
     const x = 0.06 + rnd() * 0.88;
     const y = 0.06 + rnd() * 0.88;
     const d = distToBeam(x, y);
-    if (d < 0.05 || d > band || inCore(x, y)) continue; // right beside the beam, off its core
+    if (d < 0.05 || d > band || inCore(x, y)) continue; // вплотную к лучу, но вне ядра
     const xp = x * 100;
     const yp = y * 100;
     if (centers.some((ct) => Math.hypot(ct.x - xp, ct.y - yp) < minSep)) continue;
@@ -227,7 +223,7 @@ function placeCenters(c: StarfieldConfig): { x: number; y: number }[] {
 }
 
 function buildClusters(c: StarfieldConfig, heroFraction = 1): Cluster[] {
-  const centers = placeCenters(c); // hero %
+  const centers = placeCenters(c); // % hero
   const radius = CLUSTER_RADIUS_BASE * c.pleiadesSpread;
   const perCluster = Math.max(1, Math.min(20, Math.round(c.pleiadesStars)));
   return centers.map((center, ci) => {
@@ -237,21 +233,21 @@ function buildClusters(c: StarfieldConfig, heroFraction = 1): Cluster[] {
       let gx = 0;
       let gy = 0;
       if (i > 0) {
-        // Box–Muller gaussian scatter → a naturally tight, round cluster.
+        // Гауссов разброс по Box–Muller → естественно плотное круглое скопление.
         const u1 = Math.max(1e-6, rnd());
         const u2 = rnd();
         const rr = Math.sqrt(-2 * Math.log(u1)) * 0.5;
         gx = rr * Math.cos(2 * Math.PI * u2);
         gy = rr * Math.sin(2 * Math.PI * u2);
       }
-      // Brightest star anchors the centre; magnitudes fade out with a little jitter.
-      // px size runs from ~3.6 (t=0, brightest) down to ~1.4 (t=1) across the
-      // cluster, then × nodeScale, ±15% jitter, floored at 1.1px so none vanish.
+      // Самая яркая звезда — в центре; величины гаснут с лёгким джиттером.
+      // Размер px от ~3.6 (t=0, ярчайшая) до ~1.4 (t=1), затем × nodeScale,
+      // ±15% джиттер, пол 1.1px чтобы ни одна не исчезла.
       const t = perCluster > 1 ? i / (perCluster - 1) : 0;
       const size = Math.max(1.1, (3.6 - t * 2.2) * c.nodeScale * (0.85 + rnd() * 0.3));
       nodes.push({
         x: center.x + c.pleiadesOffsetX + gx * radius,
-        // y is in hero %, scaled to the (possibly taller) container.
+        // y — в % hero, масштабируется к контейнеру.
         y: (center.y + c.pleiadesOffsetY + gy * radius) * heroFraction,
         size,
       });
@@ -267,7 +263,7 @@ function buildClusters(c: StarfieldConfig, heroFraction = 1): Cluster[] {
   });
 }
 
-// ── Clusters renderer ────────────────────────────────────────────────────────
+// ── Рендер скоплений ────────────────────────────────────────────────────────
 function PleiadesClusters({ c, heroFraction }: { c: StarfieldConfig; heroFraction: number }) {
   const clusters = useMemo(() => buildClusters(c, heroFraction), [c, heroFraction]);
   const speed = c.speed > 0 ? c.speed : 1;
@@ -278,11 +274,10 @@ function PleiadesClusters({ c, heroFraction }: { c: StarfieldConfig; heroFractio
     <>
       {clusters.map((cl, ci) => (
         <Fragment key={ci}>
-          {/* Reflection-nebula haze — a soft periwinkle glow wrapping the cluster,
-              the way M45 sits in wispy blue nebulosity. Drawn under the stars.
-              `nebulaOpacity` dims the whole element ON TOP OF the gradient's own
-              stop alphas (0.9→0), so the slider is an overall dimmer whose real
-              peak sits a bit below its value — intentional soft falloff. */}
+          {/* Дымка отражательной туманности — мягкое свечение вокруг скопления,
+              как синяя туманность M45. Под звёздами. `nebulaOpacity` гасит весь
+              элемент ПОВЕРХ альф градиента (0.9→0), поэтому слайдер — общий
+              димер, реальный пик чуть ниже значения — намеренный мягкий спад. */}
           {c.nebulaOpacity > 0 && (
             <div
               className="kvz-nebula absolute"
@@ -323,14 +318,14 @@ function PleiadesClusters({ c, heroFraction }: { c: StarfieldConfig; heroFractio
   );
 }
 
-// ── Public component ─────────────────────────────────────────────────────────
+// ── Публичный компонент ─────────────────────────────────────────────────────
 export interface StarfieldProps {
   className?: string;
-  /** Override the context config (defaults to the shared tunable config). */
+  /** Переопределяет конфиг из контекста (по умолчанию — общий тюнимый). */
   config?: StarfieldConfig;
-  /** Extend the field this many px below the hero so it tucks under the next section. */
+  /** Продлить поле на столько px ниже hero, чтобы оно заходило под следующую секцию. */
   bleedBottom?: number;
-  /** The hero's own height in px — keeps the beam keep-out aligned while bleeding. */
+  /** Высота самого hero в px — держит обход луча выровненным при bleed. */
   heroPx?: number;
 }
 
@@ -352,8 +347,8 @@ export function Starfield({ className, config, bleedBottom = 0, heroPx = 0 }: St
     [c.whiteColor, c.softColor, c.beamColor],
   );
 
-  // Config-driven CSS variables cascade to every star + node below. Memoised
-  // like stars/toneRgb so it's rebuilt only when the config or layout changes.
+  // CSS-переменные из конфига каскадом идут к каждой звезде и узлу. Мемоизация
+  // как у stars/toneRgb — пересборка только при смене конфига или layout.
   const rootVars: CSSProperties = useMemo(
     () =>
       ({
@@ -361,7 +356,7 @@ export function Starfield({ className, config, bleedBottom = 0, heroPx = 0 }: St
         "--sf-twinkle-scale": `${c.twinkleScale}`,
         "--sf-glow-blur": `${c.glowBlur}px`,
         "--sf-glow-alpha": `${c.glowAlpha}`,
-        "--sf-glow-tone": toneRgb.beam, // same triplet as the "beam"-toned stars
+        "--sf-glow-tone": toneRgb.beam, // тот же триплет, что у звёзд тона "beam"
         "--sf-flare-dur": `${(c.flarePeriod > 0 ? c.flarePeriod : 5) / speed}s`,
         "--sf-node-op": `${c.nodeOpacity}`,
         "--sf-node-peak": `${c.nodeBreathePeak}`,

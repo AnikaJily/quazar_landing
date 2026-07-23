@@ -7,68 +7,63 @@ import {
 } from "react";
 
 /**
- * StarfieldConfig — the single source of truth for the hero starfield look.
- *
- * Every knob the tuner exposes lives here. The Starfield component reads this
- * (via context) to generate the field and to drive the CSS animation variables.
- *
- * WORKFLOW: open the site with `?tune` to get the live tuner panel, adjust,
- * then Export JSON. Send that JSON back and it becomes the new
- * DEFAULT_STARFIELD_CONFIG below (paste the values in), so the live site adopts it.
+ * StarfieldConfig — единый источник вида звёздного поля hero.
+ * Здесь все «ручки» тюнера; Starfield читает их через контекст.
+ * Правка: открыть сайт с `?tune`, настроить, Export JSON → вставить в DEFAULT_STARFIELD_CONFIG.
  */
 export interface StarfieldConfig {
-  // ── Field / distribution ──────────────────────────────────────────────────
+  // ── Поле / распределение ──────────────────────────────────────────────────
   seed: number;
-  count: number; // number of field stars
-  minGap: number; // min separation (0..1 space) — anti-clump
-  edgeBias: number; // pull toward edges (1 = mild, 3 = strong)
-  avoidBeam: boolean; // carve out the quasar beam corridor
-  corridor: number; // half-width of the beam keep-out (0..1 space)
+  count: number; // число звёзд поля
+  minGap: number; // мин. дистанция (0..1) — против скучивания
+  edgeBias: number; // тяга к краям (1 — слабо, 3 — сильно)
+  avoidBeam: boolean; // вырезать коридор луча квазара
+  corridor: number; // полуширина обхода луча (0..1)
 
-  // ── Twinkle ───────────────────────────────────────────────────────────────
-  twinkleFraction: number; // 0..1 share of stars that twinkle
-  twinklePeakBoost: number; // extra opacity at the peak of a twinkle
-  twinkleScale: number; // scale at the peak of a twinkle
-  speed: number; // global animation speed multiplier (twinkle share one period)
+  // ── Мерцание ──────────────────────────────────────────────────────────────
+  twinkleFraction: number; // 0..1 доля мерцающих звёзд
+  twinklePeakBoost: number; // прибавка opacity на пике мерцания
+  twinkleScale: number; // scale на пике мерцания
+  speed: number; // общий множитель скорости анимации
 
-  // ── Flares ────────────────────────────────────────────────────────────────
-  flareCount: number; // number of 4-point cross flares
-  flarePeriod: number; // seconds between blooms of a single flare (lower = чаще)
+  // ── Вспышки ───────────────────────────────────────────────────────────────
+  flareCount: number; // число крестиков-вспышек
+  flarePeriod: number; // секунд между вспышками одного крестика (меньше = чаще)
 
-  // ── Size / brightness ─────────────────────────────────────────────────────
-  sizeSmall: number; // px — the common pinpoint
+  // ── Размер / яркость ──────────────────────────────────────────────────────
+  sizeSmall: number; // px — обычная точка
   sizeMid: number; // px
-  sizeLarge: number; // px — the rare larger star
+  sizeLarge: number; // px — редкая крупная звезда
   staticOpacityMin: number;
   staticOpacityMax: number;
   twinkleOpacityMin: number;
   twinkleOpacityMax: number;
-  glowBlur: number; // px — halo blur on shining stars
-  glowAlpha: number; // 0..1 — halo strength
+  glowBlur: number; // px — размытие ореола у ярких звёзд
+  glowAlpha: number; // 0..1 — сила ореола
 
-  // ── Colours ───────────────────────────────────────────────────────────────
-  whiteColor: string; // hex — dominant star colour
-  softColor: string; // hex — soft tint (also the Pleiades nodes)
-  beamColor: string; // hex — rarer quasar-beam tint
-  softFraction: number; // 0..1 share tinted with softColor
-  beamFraction: number; // 0..1 share tinted with beamColor
+  // ── Цвета ─────────────────────────────────────────────────────────────────
+  whiteColor: string; // hex — основной цвет звёзд
+  softColor: string; // hex — мягкий оттенок (и узлы Плеяд)
+  beamColor: string; // hex — редкий оттенок луча квазара
+  softFraction: number; // 0..1 доля с softColor
+  beamFraction: number; // 0..1 доля с beamColor
 
-  // ── Pleiades (procedural open clusters, M45-style) ────────────────────────
+  // ── Плеяды (процедурные рассеянные скопления, тип M45) ────────────────────
   pleiades: boolean;
-  pleiadesCount: number; // number of clusters (first is anchored top-right)
-  pleiadesStars: number; // stars per cluster
-  nebulaOpacity: number; // soft reflection-nebula haze around each cluster
-  pleiadesSpread: number; // cluster tightness/spread
-  pleiadesOffsetX: number; // % nudge applied to all clusters
+  pleiadesCount: number; // число скоплений (первое привязано вправо-вверх)
+  pleiadesStars: number; // звёзд в скоплении
+  nebulaOpacity: number; // дымка туманности вокруг скопления
+  pleiadesSpread: number; // плотность/разброс скопления
+  pleiadesOffsetX: number; // % сдвиг всех скоплений
   pleiadesOffsetY: number;
-  nodeScale: number; // multiplies star sizes
-  nodeOpacity: number; // base star opacity
-  nodeBreathePeak: number; // star opacity at breathe peak
+  nodeScale: number; // множитель размеров звёзд
+  nodeOpacity: number; // базовая opacity звёзд
+  nodeBreathePeak: number; // opacity на пике «дыхания»
   nodeGlowBlur: number; // px
   nodeGlowAlpha: number; // 0..1
 }
 
-// Tuned by the user in the ?tune panel and applied here as the site default.
+// Дефолт сайта: значения, настроенные в панели ?tune.
 export const DEFAULT_STARFIELD_CONFIG: StarfieldConfig = {
   seed: 20908,
   count: 70,
@@ -115,8 +110,8 @@ export const DEFAULT_STARFIELD_CONFIG: StarfieldConfig = {
   nodeGlowAlpha: 0.45,
 };
 
-// Footer sky — the same look, thinned out, no beam keep-out or clusters
-// (there's no quasar down there). Its own seed for a distinct scatter.
+// Небо футера — тот же вид, но разреженнее, без обхода луча и скоплений
+// (квазара там нет). Свой сид ради иного разброса.
 export const FOOTER_STARFIELD_CONFIG: StarfieldConfig = {
   ...DEFAULT_STARFIELD_CONFIG,
   seed: 0x2f10,
@@ -128,7 +123,7 @@ export const FOOTER_STARFIELD_CONFIG: StarfieldConfig = {
 
 const HEX_RE = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
-/** "#c2d0f3" → "195, 208, 243" for use inside rgba(var(--tone), a). */
+/** "#c2d0f3" → "195, 208, 243" для rgba(var(--tone), a). */
 export function hexToRgbTriplet(hex: string): string {
   const m = HEX_RE.exec((hex || "").trim());
   if (!m) return "255, 255, 255";
@@ -144,7 +139,7 @@ export function hexToRgbTriplet(hex: string): string {
   return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
 }
 
-/** Merge an imported (possibly partial) config onto the defaults, keeping types. */
+/** Слить импортированный (возможно частичный) конфиг с дефолтами, сохраняя типы. */
 export function normalizeConfig(input: unknown): StarfieldConfig {
   const merged = { ...DEFAULT_STARFIELD_CONFIG };
   if (input && typeof input === "object") {
@@ -157,7 +152,7 @@ export function normalizeConfig(input: unknown): StarfieldConfig {
       } else if (typeof def === "boolean" && typeof v === "boolean") {
         (merged[key] as boolean) = v;
       } else if (typeof def === "string" && typeof v === "string") {
-        // Colour fields must be valid hex, else keep the default (import safety).
+        // Цвет обязан быть валидным hex, иначе — дефолт (защита импорта).
         if (def.startsWith("#") && !HEX_RE.test(v)) continue;
         (merged[key] as string) = v;
       }
@@ -181,10 +176,8 @@ const StarfieldConfigContext = createContext<StarfieldConfigCtx>({
 export const useStarfieldConfig = () => useContext(StarfieldConfigContext);
 
 /**
- * True only in a dev build AND when the page was opened with `?tune`. This is
- * the single gate for live tuning + localStorage persistence: production
- * visitors never read or write the tuner's stored config — even if they add
- * `?tune` to the URL — so the live site always renders the config from code.
+ * True только в dev-сборке и при `?tune` — единый ключ к тюнингу и localStorage.
+ * В проде тюнер не читается/не пишется, поэтому сайт всегда рендерит конфиг из кода.
  */
 export function isTuning(): boolean {
   if (!import.meta.env.DEV) return false;
@@ -195,10 +188,8 @@ export function isTuning(): boolean {
 const LS_KEY = "kvz-starfield-config";
 
 /**
- * Wraps the app. In normal viewing it just serves DEFAULT_STARFIELD_CONFIG and
- * never mutates it. Under `?tune` it becomes editable and persists to
- * localStorage so an in-progress tuning survives reloads. Production visitors
- * are never affected.
+ * Оборачивает приложение. Обычно отдаёт DEFAULT_STARFIELD_CONFIG без изменений.
+ * Под `?tune` конфиг редактируется и пишется в localStorage (переживает перезагрузку).
  */
 export function StarfieldConfigProvider({ children }: { children: ReactNode }) {
   const tuning = isTuning();
@@ -208,7 +199,7 @@ export function StarfieldConfigProvider({ children }: { children: ReactNode }) {
         const raw = localStorage.getItem(LS_KEY);
         if (raw) return normalizeConfig(JSON.parse(raw));
       } catch {
-        /* ignore */
+        /* игнор */
       }
     }
     return DEFAULT_STARFIELD_CONFIG;

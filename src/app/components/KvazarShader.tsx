@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { SHADER_BEAM } from "./kvazarBeam";
 
-// ---- GLSL sources ----
+// ---- Исходники GLSL ----
 
 const VS_QUAD = `#version 300 es
 in vec2 aPos;
@@ -215,7 +215,7 @@ void main() {
   fragColor = vec4(darkened, 1.0);
 }`;
 
-// ---- WebGL helpers ----
+// ---- Хелперы WebGL ----
 
 type FBO = { fbo: WebGLFramebuffer; tex: WebGLTexture; w: number; h: number };
 
@@ -259,7 +259,7 @@ function deleteFBO(gl: WebGL2RenderingContext, f: FBO) {
   gl.deleteTexture(f.tex);
 }
 
-// ---- Component ----
+// ---- Компонент ----
 
 const SHADER_FONT_FAMILY = "Manrope, sans-serif";
 const SHADER_FONT_WEIGHT = 600;
@@ -282,7 +282,7 @@ export function KvazarShader({ className }: { className?: string }) {
     const DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // quad VAO
+    // VAO для полноэкранного квада
     const vao = gl.createVertexArray()!;
     gl.bindVertexArray(vao);
     const buf = gl.createBuffer()!;
@@ -292,7 +292,7 @@ export function KvazarShader({ className }: { className?: string }) {
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
     gl.bindVertexArray(null);
 
-    // programs
+    // программы
     const progReplicate = makeProgram(gl, VS_QUAD, FS_REPLICATE);
     const progShatter   = makeProgram(gl, VS_QUAD, FS_SHATTER);
     const progBeam      = makeProgram(gl, VS_QUAD, FS_BEAM);
@@ -312,7 +312,7 @@ export function KvazarShader({ className }: { className?: string }) {
       [progVignette,  uLocs(progVignette)],
     ]);
 
-    // text texture via Canvas2D
+    // текстура текста через Canvas2D
     const textCanvas = document.createElement("canvas");
     const textCtx = textCanvas.getContext("2d")!;
     const textTex = gl.createTexture()!;
@@ -342,7 +342,7 @@ export function KvazarShader({ className }: { className?: string }) {
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
     }
 
-    // FBOs
+    // FBO
     let fboA: FBO, fboB: FBO, fboC: FBO;
 
     function resize() {
@@ -364,7 +364,7 @@ export function KvazarShader({ className }: { className?: string }) {
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
 
-    // render pass
+    // проход рендера
     function pass(
       prog: WebGLProgram,
       inputTex: WebGLTexture,
@@ -397,7 +397,7 @@ export function KvazarShader({ className }: { className?: string }) {
     let tabVisible = document.visibilityState === "visible";
 
     function render() {
-      const t = (performance.now() - t0) / 1000 * 60; // UnicornStudio time unit
+      const t = (performance.now() - t0) / 1000 * 60; // единица времени UnicornStudio
       pass(progReplicate, textTex, fboA, t * SPEEDS.replicate);
       pass(progShatter, fboA.tex, fboB, t * SPEEDS.shatter);
       pass(progBeam, fboB.tex, fboC, t * SPEEDS.beam);
