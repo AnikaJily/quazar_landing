@@ -180,8 +180,14 @@ const StarfieldConfigContext = createContext<StarfieldConfigCtx>({
 
 export const useStarfieldConfig = () => useContext(StarfieldConfigContext);
 
-/** True when the page was opened with `?tune` — enables live tuning + persistence. */
+/**
+ * True only in a dev build AND when the page was opened with `?tune`. This is
+ * the single gate for live tuning + localStorage persistence: production
+ * visitors never read or write the tuner's stored config — even if they add
+ * `?tune` to the URL — so the live site always renders the config from code.
+ */
 export function isTuning(): boolean {
+  if (!import.meta.env.DEV) return false;
   if (typeof window === "undefined") return false;
   return new URLSearchParams(window.location.search).has("tune");
 }

@@ -1,28 +1,33 @@
+import { SHADER_BEAM } from "../components/kvazarBeam";
+
 /**
  * beamGeometry — the quasar beam's line, in the starfield's screen space.
  * ---------------------------------------------------------------------------
- * ⚠️ FRAGILE COUPLING. These numbers are HAND-DERIVED from the WebGL shader that
- * draws the visible beam, in `app/components/KvazarShader.tsx` (FS_BEAM):
- *
- *     drawLine(uv, vec2(0.49556, 0.48547), 0.542, -0.1269, ...)
- *                    └ center (uv) ┘              └ angle (turns)
+ * `BEAM` is DERIVED from the shader's params (`SHADER_BEAM` in
+ * `app/components/kvazarBeam.ts`), so it can never drift out of sync: change the
+ * beam once there and this follows automatically.
  *
  * The shader works in uv space (y-up); the starfield positions stars in screen
  * space (y-down, `top: y%`). Conversion:
- *   - cx unchanged            → 0.49556
- *   - cy = 1 - 0.48547        → 0.51453   (y flips)
- *   - direction y-component flips sign → the "/" diagonal (bottom-left ↔ top-right),
- *     i.e. the beam you actually see. (An earlier "\" guess silently hugged the
- *     WRONG diagonal — see git history.)
+ *   - cx unchanged                       → 0.49556
+ *   - cy = 1 - shader.cy                 → 0.51453   (y flips)
+ *   - direction from the shader's angle, with its y-component flipped in sign →
+ *     the "/" diagonal (bottom-left ↔ top-right), i.e. the beam you actually see.
+ *     (An earlier "\" guess silently hugged the WRONG diagonal — see git history.)
  *
- * MAINTENANCE RULE: if you change the shader's beam center or angle, you MUST
- * re-derive BEAM here (and re-check the inCore ellipse radii below). Nothing
- * enforces the link — a mismatch just drifts stars onto the beam.
+ * NOTE: the `inCore` ellipse radii below are still eyeballed, not derived — if
+ * you retune the beam's thickness, re-check them.
  *
  * Used by the field generator to (a) keep field stars off the beam when
  * `avoidBeam` is on, and (b) place Pleiades clusters hugging the beam.
  */
-export const BEAM = { cx: 0.49556, cy: 0.51453, dirX: 0.6986, dirY: -0.7155 };
+const BEAM_RAD = -SHADER_BEAM.angle * 2 * Math.PI; // shader's `radAngle`
+export const BEAM = {
+  cx: SHADER_BEAM.cx,
+  cy: 1 - SHADER_BEAM.cy, // uv y-up → screen y-down
+  dirX: Math.cos(BEAM_RAD),
+  dirY: -Math.sin(BEAM_RAD), // y flips with the coordinate space
+};
 
 /** Perpendicular distance (0..~1) from a point to the beam line. */
 export function distToBeam(x01: number, y01: number): number {

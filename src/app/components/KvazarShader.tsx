@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { SHADER_BEAM } from "./kvazarBeam";
 
 // ---- GLSL sources ----
 
@@ -143,7 +144,7 @@ float drawLine(vec2 uv, vec2 center, float scale, float angle, float time, float
 void main() {
   vec2 uv = vTextureCoord;
   vec4 bg = texture(uTexture, uv);
-  float beam = drawLine(uv, vec2(0.49556, 0.48547), 0.542, -0.1269, uTime, 0.495, 0.29);
+  float beam = drawLine(uv, vec2(${SHADER_BEAM.cx}, ${SHADER_BEAM.cy}), ${SHADER_BEAM.scale}, ${SHADER_BEAM.angle}, uTime, 0.495, 0.29);
   vec3 beamColor = beam * vec3(0.592156, 0.654902, 0.996078);
   vec3 result = tanhTonemap(beamColor) + deband();
   vec3 blended = result + bg.rgb;

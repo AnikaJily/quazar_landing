@@ -53,6 +53,11 @@ type StarTone = "white" | "soft" | "beam";
 const NODE_PERIOD = 12; // seconds
 const TWINKLE_BASE = 5; // seconds — shared twinkle period (scaled by speed)
 
+// Field-star size mix, keyed off a uniform 0..1 roll: the rare large star, the
+// occasional mid, the common small pinpoint.
+const SIZE_LARGE_ABOVE = 0.94; // top ~6% of stars are large
+const SIZE_MID_ABOVE = 0.78; // next ~16% are mid, the rest small
+
 interface Star {
   x: number; // %
   y: number; // %
@@ -129,7 +134,8 @@ function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
 
   return positions.map((p) => {
     const sr = rndStyle();
-    const size = sr > 0.94 ? c.sizeLarge : sr > 0.78 ? c.sizeMid : c.sizeSmall;
+    const size =
+      sr > SIZE_LARGE_ABOVE ? c.sizeLarge : sr > SIZE_MID_ABOVE ? c.sizeMid : c.sizeSmall;
 
     // Twinkle and flare are independent reservoir picks over the same pool — a
     // star can both twinkle AND flash a cross — and both counts land exactly.
@@ -179,6 +185,7 @@ function buildField(c: StarfieldConfig, heroFraction = 1): Star[] {
 // seeded sampler into other dark, beam-free zones with a minimum separation.
 
 const CLUSTER_RADIUS_BASE = 3.3; // % of container at spread 1
+const NEBULA_PX_PER_RADIUS = 58; // haze diameter in px per unit of cluster radius (%)
 
 interface ClusterNode {
   x: number;
@@ -238,6 +245,8 @@ function buildClusters(c: StarfieldConfig, heroFraction = 1): Cluster[] {
         gy = rr * Math.sin(2 * Math.PI * u2);
       }
       // Brightest star anchors the centre; magnitudes fade out with a little jitter.
+      // px size runs from ~3.6 (t=0, brightest) down to ~1.4 (t=1) across the
+      // cluster, then × nodeScale, ±15% jitter, floored at 1.1px so none vanish.
       const t = perCluster > 1 ? i / (perCluster - 1) : 0;
       const size = Math.max(1.1, (3.6 - t * 2.2) * c.nodeScale * (0.85 + rnd() * 0.3));
       nodes.push({
@@ -270,15 +279,18 @@ function PleiadesClusters({ c, heroFraction }: { c: StarfieldConfig; heroFractio
       {clusters.map((cl, ci) => (
         <Fragment key={ci}>
           {/* Reflection-nebula haze — a soft periwinkle glow wrapping the cluster,
-              the way M45 sits in wispy blue nebulosity. Drawn under the stars. */}
+              the way M45 sits in wispy blue nebulosity. Drawn under the stars.
+              `nebulaOpacity` dims the whole element ON TOP OF the gradient's own
+              stop alphas (0.9→0), so the slider is an overall dimmer whose real
+              peak sits a bit below its value — intentional soft falloff. */}
           {c.nebulaOpacity > 0 && (
             <div
               className="kvz-nebula absolute"
               style={{
                 left: `${cl.center.x}%`,
                 top: `${cl.center.y}%`,
-                width: `${cl.radius * 58}px`,
-                height: `${cl.radius * 58}px`,
+                width: `${cl.radius * NEBULA_PX_PER_RADIUS}px`,
+                height: `${cl.radius * NEBULA_PX_PER_RADIUS}px`,
                 opacity: c.nebulaOpacity,
                 background: `radial-gradient(circle, rgba(${nodeTone}, 0.9) 0%, rgba(${nodeTone}, 0.28) 32%, rgba(${nodeTone}, 0) 68%)`,
               }}
@@ -340,20 +352,25 @@ export function Starfield({ className, config, bleedBottom = 0, heroPx = 0 }: St
     [c.whiteColor, c.softColor, c.beamColor],
   );
 
-  // Config-driven CSS variables cascade to every star + node below.
-  const rootVars: CSSProperties = {
-    "--sf-twinkle-peak": `${c.twinklePeakBoost}`,
-    "--sf-twinkle-scale": `${c.twinkleScale}`,
-    "--sf-glow-blur": `${c.glowBlur}px`,
-    "--sf-glow-alpha": `${c.glowAlpha}`,
-    "--sf-glow-tone": hexToRgbTriplet(c.beamColor),
-    "--sf-flare-dur": `${(c.flarePeriod > 0 ? c.flarePeriod : 5) / speed}s`,
-    "--sf-node-op": `${c.nodeOpacity}`,
-    "--sf-node-peak": `${c.nodeBreathePeak}`,
-    "--sf-node-glow-blur": `${c.nodeGlowBlur}px`,
-    "--sf-node-glow-alpha": `${c.nodeGlowAlpha}`,
-    bottom: `${-bleedBottom}px`,
-  } as CSSProperties;
+  // Config-driven CSS variables cascade to every star + node below. Memoised
+  // like stars/toneRgb so it's rebuilt only when the config or layout changes.
+  const rootVars: CSSProperties = useMemo(
+    () =>
+      ({
+        "--sf-twinkle-peak": `${c.twinklePeakBoost}`,
+        "--sf-twinkle-scale": `${c.twinkleScale}`,
+        "--sf-glow-blur": `${c.glowBlur}px`,
+        "--sf-glow-alpha": `${c.glowAlpha}`,
+        "--sf-glow-tone": toneRgb.beam, // same triplet as the "beam"-toned stars
+        "--sf-flare-dur": `${(c.flarePeriod > 0 ? c.flarePeriod : 5) / speed}s`,
+        "--sf-node-op": `${c.nodeOpacity}`,
+        "--sf-node-peak": `${c.nodeBreathePeak}`,
+        "--sf-node-glow-blur": `${c.nodeGlowBlur}px`,
+        "--sf-node-glow-alpha": `${c.nodeGlowAlpha}`,
+        bottom: `${-bleedBottom}px`,
+      }) as CSSProperties,
+    [c, speed, bleedBottom, toneRgb],
+  );
 
   return (
     <div

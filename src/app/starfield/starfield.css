@@ -4,8 +4,10 @@
    CSS custom properties:
      · root wrapper: --sf-*   (shared: twinkle-peak/scale, glow-*, flare-dur, node-*)
      · per star:     --kvz-*  (tone / base / peak / dur / delay)
-   Every var() carries a fallback that mirrors a config default — keep them in
-   sync with starfieldConfig.tsx if you change semantics. */
+   Each var() carries a fallback that mirrors its config default — keep them in
+   sync with starfieldConfig.tsx if you change semantics. Two exceptions:
+   --sf-glow-tone falls back to a var() chain (--kvz-tone), and --sf-flare-dur
+   holds flarePeriod/speed (already divided by speed), not the raw period. */
 
 .kvz-star {
   /* Soft round glow via layered radial-gradient — no box-shadow spread, so it
@@ -36,25 +38,17 @@
   }
 }
 
-.kvz-star--twinkle {
+/* Twinkle & flare share the same gentle swell (opacity + a whisper of scale)
+   and the same soft halo. Flare is rare and adds a 4-point cross sparkle via the
+   ::before below. --kvz-dur is always set from JS, so its fallback never applies. */
+.kvz-star--twinkle,
+.kvz-star--flare {
   animation: kvz-twinkle var(--kvz-dur, 10s)
     cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
   animation-delay: var(--kvz-delay, 0s);
   /* A soft halo so the shining stars read as points of light, not flat dots. */
   box-shadow: 0 0 var(--sf-glow-blur, 6px) 0.5px
-    rgba(var(--sf-glow-tone, var(--kvz-tone)), var(--sf-glow-alpha, 0.4));
-  will-change: opacity, transform;
-}
-
-/* Flare: rare. Same gentle swell, plus a soft 4-point cross sparkle bloomed via
-   two crossed hairline gradients on a ::before that is invisible except at the
-   peak of a long cycle. */
-.kvz-star--flare {
-  animation: kvz-twinkle var(--kvz-dur, 11s)
-    cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
-  animation-delay: var(--kvz-delay, 0s);
-  box-shadow: 0 0 var(--sf-glow-blur, 6px) 0.5px
-    rgba(var(--sf-glow-tone, var(--kvz-tone)), var(--sf-glow-alpha, 0.4));
+    rgba(var(--sf-glow-tone, var(--kvz-tone)), var(--sf-glow-alpha, 0.5));
   will-change: opacity, transform;
 }
 
@@ -112,9 +106,9 @@
     rgba(var(--kvz-tone), 0.8) 40%,
     rgba(var(--kvz-tone), 0) 80%
   );
-  box-shadow: 0 0 var(--sf-node-glow-blur, 9px) 1.5px
-    rgba(var(--kvz-tone), var(--sf-node-glow-alpha, 0.4));
-  opacity: var(--sf-node-op, 0.72);
+  box-shadow: 0 0 var(--sf-node-glow-blur, 10px) 1.5px
+    rgba(var(--kvz-tone), var(--sf-node-glow-alpha, 0.45));
+  opacity: var(--sf-node-op, 0.8);
   animation: kvz-node-breathe var(--kvz-ndur, 12s)
     cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
   animation-delay: var(--kvz-delay, 0s);
@@ -124,7 +118,7 @@
 @keyframes kvz-node-breathe {
   0%,
   100% {
-    opacity: var(--sf-node-op, 0.72);
+    opacity: var(--sf-node-op, 0.8);
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
@@ -164,7 +158,7 @@
 
   .kvz-star--node {
     opacity: calc(
-      var(--sf-node-op, 0.72) + (var(--sf-node-peak, 1) - var(--sf-node-op, 0.72)) * 0.5
+      var(--sf-node-op, 0.8) + (var(--sf-node-peak, 1) - var(--sf-node-op, 0.8)) * 0.5
     );
   }
 }
