@@ -1,11 +1,33 @@
+# Kvazar — лендинг
 
-  # Создать страницу с анимацией
+Одностраничный лендинг студии разработки **Kvazar**: веб-платформы, мобильные
+приложения и серверные системы — от первого MVP до архитектуры под высокую нагрузку.
 
-  This is a code bundle for Создать страницу с анимацией. The original project is available at https://www.figma.com/design/3rc6pmE56ujIdpgY1gnJrc/%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D1%82%D1%8C-%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%83-%D1%81-%D0%B0%D0%BD%D0%B8%D0%BC%D0%B0%D1%86%D0%B8%D0%B5%D0%B9.
+🌐 **Живой сайт:** https://dapper-kringle-184d7b.netlify.app/
 
-  ## Running the code
+## Стек
 
-  Run `npm i` to install the dependencies.
+- **React 18** + **TypeScript**
+- **Vite 6** (сборка и дев-сервер)
+- **Tailwind CSS 4**
+- **motion** — анимации интерфейса
+- **WebGL2**-шейдер квазара + CSS-звёздное поле в hero/footer
 
-  Run `npm run dev` to start the development server.
-  
+## Запуск
+
+```bash
+npm i          # установить зависимости
+npm run dev    # дев-сервер → http://localhost:5173
+npm run build  # прод-сборка в dist/
+```
+
+## Звёздное поле «Cartographer's echo»
+
+Декоративное звёздное поле, свечение квазара и живой тюнер вынесены в отдельный
+модуль `src/app/starfield/`. Как встроить его в новую секцию, настроить вид и не
+сломать хрупкие места — в [его README](src/app/starfield/README.md). В dev-сборке
+открой сайт с `?tune`, чтобы покрутить параметры вживую.
+
+## Дизайн
+
+Макет в Figma: [Создать страницу с анимацией](https://www.figma.com/design/3rc6pmE56ujIdpgY1gnJrc/%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D1%82%D1%8C-%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%83-%D1%81-%D0%B0%D0%BD%D0%B8%D0%BC%D0%B0%D1%86%D0%B8%D0%B5%D0%B9).
