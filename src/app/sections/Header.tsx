@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import imgLogo from "figma:asset/kvazar-logo.svg";
 import { PillButton } from "../components/PillButton";
 import { ArrowIcon } from "../components/ArrowIcon";
 import { getActiveSectionId, NAV_ITEMS } from "../lib/nav";
@@ -28,11 +29,8 @@ export function Header() {
     >
       <div className="w-[1152px] mx-auto flex items-center justify-between">
         <div className="flex gap-[50px] items-center">
-          <a href="#hero" className="flex gap-[7px] items-center">
-            <div className="bg-white rounded-[8.75px] size-[28px]" />
-            <span className="font-['Inter:Semi_Bold',sans-serif] font-semibold text-white text-[16px] tracking-[-0.15px]">
-              Kvazar
-            </span>
+          <a href="#hero" className="flex items-center" aria-label="Квазар — на главную">
+            <img src={imgLogo} alt="Квазар" className="h-[26px] w-auto" />
           </a>
           <nav className="flex gap-[21px] items-center">
             {NAV_ITEMS.map((item) => {

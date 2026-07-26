@@ -7,7 +7,7 @@ import { Wave } from "../lib/motion";
 import { cn } from "../lib/cn";
 
 const FIELD =
-  "bg-[#e6ebf5] rounded-[15px] px-[20px] py-[20px] w-full font-['Inter:Regular',sans-serif] text-[18px] text-[#030303] placeholder:text-[#9ca1ba] tracking-[-0.72px] leading-[99.9%] outline-none focus:ring-2 focus:ring-[#4774BC]/40 transition";
+  "bg-[#e6ebf5] rounded-[15px] px-[20px] py-[20px] w-full font-['Inter',sans-serif] text-[18px] text-[#030303] placeholder:text-[#9ca1ba] tracking-[-0.72px] leading-[99.9%] outline-none focus:ring-2 focus:ring-[#4774BC]/40 transition";
 
 export function ContactForm() {
   const [sent, setSent] = useState(false);
@@ -29,7 +29,7 @@ export function ContactForm() {
             <SectionTitle className={cn("gradient-shimmer-text", inView && "is-active")}>
               Начнем проект вместе?
             </SectionTitle>
-            <p className="font-['Inter:Regular',sans-serif] text-[18px] tracking-[-0.72px] leading-[99.9%]">
+            <p className="font-['Inter',sans-serif] text-[18px] tracking-[-0.72px] leading-[99.9%]">
               Перезвоним в течении 15 минут и дадим честную оценку сроков и стоимости
             </p>
           </div>

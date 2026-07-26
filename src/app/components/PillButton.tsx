@@ -5,7 +5,7 @@ import { cn } from "../lib/cn";
 import { hoverScale } from "../lib/motion";
 
 const pill = cva(
-  "group inline-flex items-center justify-center rounded-[40px] whitespace-nowrap select-none cursor-pointer font-['Inter:Regular',sans-serif] font-normal leading-[99.915%]",
+  "group inline-flex items-center justify-center rounded-[40px] whitespace-nowrap select-none cursor-pointer font-['Inter',sans-serif] font-normal leading-[99.915%]",
   {
     variants: {
       tone: {

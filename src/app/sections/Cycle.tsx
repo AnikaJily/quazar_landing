@@ -94,23 +94,23 @@ function CycleCard({ title, subtitle, bullets, decoration }: CycleCardData) {
       <div className="bg-[#e6ebf5] rounded-[10px] h-[172px] w-full relative overflow-hidden shrink-0">
         {decoration}
         <div className="absolute bottom-[19.71px] left-[20px] flex flex-col gap-[15px] text-[#030303]">
-          <p className="font-['Manrope:ExtraBold',sans-serif] font-extrabold text-[25px] leading-[99.9%]">
+          <p className="font-['Manrope',sans-serif] font-extrabold text-[25px] leading-[99.9%]">
             {title}
           </p>
-          <p className="font-['Inter:Regular',sans-serif] text-[18px] leading-[99.9%] tracking-[-0.54px]">
+          <p className="font-['Inter',sans-serif] text-[18px] leading-[99.9%] tracking-[-0.54px]">
             {subtitle}
           </p>
         </div>
       </div>
       <div className="flex flex-col gap-[25px] w-full">
-        <p className="font-['Inter:Regular',sans-serif] text-[18px] text-[rgba(3,3,3,0.5)] leading-[99.9%] tracking-[-0.54px]">
+        <p className="font-['Inter',sans-serif] text-[18px] text-[rgba(3,3,3,0.5)] leading-[99.9%] tracking-[-0.54px]">
           Как мы работаем
         </p>
         <ul className="flex flex-col gap-[15px] w-full">
           {bullets.map((text) => (
             <li key={text} className="flex gap-[10px] items-start">
               <span className="shrink-0 mt-[5px] block size-[8px] rounded-full bg-[#4774BC]" />
-              <span className="font-['Inter:Regular',sans-serif] text-[18px] text-black leading-[120%] tracking-[-0.54px]">
+              <span className="font-['Inter',sans-serif] text-[18px] text-black leading-[120%] tracking-[-0.54px]">
                 {text}
               </span>
             </li>
@@ -127,7 +127,7 @@ export function Cycle() {
       <Wave>
         <div className="flex flex-col gap-[25px] items-center text-[#030303] text-center">
           <SectionTitle>Весь цикл или один этап — решаете вы</SectionTitle>
-          <p className="font-['Inter:Regular',sans-serif] text-[18px] tracking-[-0.72px] leading-[99.9%]">
+          <p className="font-['Inter',sans-serif] text-[18px] tracking-[-0.72px] leading-[99.9%]">
             Можем взять проект с нуля или подключиться там, где нужна помощь
           </p>
         </div>

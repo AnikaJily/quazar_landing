@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import imgPhoneProduct from "figma:asset/phone-product.png";
 import { SectionTitle } from "../components/SectionTitle";
 import { ArrowIcon } from "../components/ArrowIcon";
 import { hoverLift, hoverScale, Wave } from "../lib/motion";
@@ -8,34 +7,46 @@ import { hoverLift, hoverScale, Wave } from "../lib/motion";
 export interface ShowcaseItem {
   title: string;
   description: string;
-  image?: string;
-  href?: string;
+  image: string;
+  href: string;
 }
 
 const CARD_W = 500;
 const GAP = 50;
 const VISIBLE = 2;
 
-function Card({ title, description, image = imgPhoneProduct, href = "#" }: ShowcaseItem) {
+function Card({ title, description, image, href }: ShowcaseItem) {
   return (
-    <motion.a
-      href={href}
-      className="flex flex-col gap-[27px] items-end shrink-0 cursor-pointer"
+    <motion.div
+      className="flex flex-col gap-[30px] items-start shrink-0"
       style={{ width: CARD_W }}
       {...hoverLift}
     >
-      <div className="size-[500px] rounded-[15px] overflow-hidden bg-[#1a1d24] relative">
+      <div className="size-[500px] rounded-[30px] overflow-hidden bg-[#1a1d24] relative">
         <img alt="" src={image} className="absolute inset-0 size-full object-cover" />
       </div>
       <div className="flex flex-col gap-[20px] w-full">
-        <p className="font-['Manrope:ExtraBold',sans-serif] font-extrabold text-white text-[25px] leading-[99.9%]">
+        <p className="font-['Manrope',sans-serif] font-extrabold text-white text-[25px] leading-[99.9%]">
           {title}
         </p>
-        <p className="font-['Inter:Regular',sans-serif] text-[#b9b9b9] text-[18px] tracking-[-0.72px] leading-[140%]">
+        <p className="font-['Inter',sans-serif] text-[#b9b9b9] text-[18px] tracking-[-0.72px] leading-[140%]">
           {description}
         </p>
       </div>
-    </motion.a>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group inline-flex items-center gap-[10px] cursor-pointer text-[#6d90ff]"
+      >
+        <span className="font-['Inter',sans-serif] text-[16px] tracking-[-0.64px] leading-[99.915%] whitespace-nowrap underline-offset-4 group-hover:underline">
+          Перейти на сайт
+        </span>
+        <span className="transition-transform duration-200 group-hover:translate-x-[3px]">
+          <ArrowIcon size={13} fill="#6d90ff" />
+        </span>
+      </a>
+    </motion.div>
   );
 }
 

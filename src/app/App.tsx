@@ -1,4 +1,8 @@
 import imgTextures from "figma:asset/textures.jpg";
+import imgProductKvazarTorgi from "figma:asset/product-kvazar-torgi.jpg";
+import imgCaseTigrisNerud from "figma:asset/case-tigris-nerud.jpg";
+import imgCaseTigrisMonolit from "figma:asset/case-tigris-monolit.jpg";
+import imgCaseTigrisPlitka from "figma:asset/case-tigris-plitka.jpg";
 import { Hero } from "./sections/Hero";
 import { Directions } from "./sections/Directions";
 import { Team } from "./sections/Team";
@@ -10,15 +14,37 @@ import { Footer } from "./sections/Footer";
 import { StarfieldConfigProvider, StarfieldTuner } from "./starfield";
 
 const PRODUCTS: ShowcaseItem[] = [
-  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
-  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
-  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+  {
+    title: "Квазар Торги",
+    description:
+      "Платформа для поиска тендеров, торгов и госзакупок: точные фильтры, аналитика конкурентов и совместная работы команды над закупками",
+    image: imgProductKvazarTorgi,
+    href: "https://torgi.devkvazar.ru/",
+  },
 ];
 
 const CASES: ShowcaseItem[] = [
-  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
-  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
-  { title: "Kvazar Торги", description: "Разработали систему поиска тендеров, торгов и госзакупок" },
+  {
+    title: "ТИГРИС НЕРУД",
+    description:
+      "Сайт поставщика нерудных материалов: песок, щебень, ПГС и грунт с доставкой от 5 м³ и собственным автопарком",
+    image: imgCaseTigrisNerud,
+    href: "https://tigris-nerud.ru/",
+  },
+  {
+    title: "ТИГРИС МОНОЛИТ",
+    description:
+      "Сайт подрядчика по монолитному строительству: колонны, стены, перекрытия и лестницы под ключ с гарантией 5 лет",
+    image: imgCaseTigrisMonolit,
+    href: "https://tigris-monolit.ru/",
+  },
+  {
+    title: "ТИГРИС ПЛИТКА",
+    description:
+      "Сайт B2B-подрядчика по плиточным работам: укладка керамогранита, камня и мозаики под ключ",
+    image: imgCaseTigrisPlitka,
+    href: "https://tigris-plitka.ru/",
+  },
 ];
 
 function LightPanel() {

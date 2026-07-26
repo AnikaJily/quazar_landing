@@ -12,7 +12,7 @@ export function SectionTitle({
   return (
     <Tag
       className={cn(
-        "font-['Manrope:ExtraBold',sans-serif] font-extrabold text-[48px] leading-[99.9%] tracking-[-0.5px]",
+        "font-['Manrope',sans-serif] font-extrabold text-[48px] leading-[99.9%] tracking-[-0.5px]",
         className,
       )}
     >

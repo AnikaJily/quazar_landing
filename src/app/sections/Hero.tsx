@@ -34,7 +34,7 @@ export function Hero() {
         <Header />
 
         <div className="mt-[68px] flex flex-col gap-[40px] items-start w-[577px]">
-          <h1 className="font-['Manrope:ExtraBold',sans-serif] font-extrabold text-white text-[48px] leading-[99.9%] drop-shadow-[0px_0px_3.5px_rgba(255,255,255,0.15)]">
+          <h1 className="font-['Manrope',sans-serif] font-extrabold text-white text-[48px] leading-[99.9%] drop-shadow-[0px_0px_3.5px_rgba(255,255,255,0.15)]">
             Превращаем идеи
             <br />в работающий продукт
           </h1>
@@ -46,7 +46,7 @@ export function Hero() {
           </div>
         </div>
 
-        <p className="mt-auto mb-[114px] font-['Inter:Regular',sans-serif] text-white text-[18px] tracking-[-0.72px] leading-[140%] w-[375px] self-end">
+        <p className="mt-auto mb-[114px] font-['Inter',sans-serif] text-white text-[18px] tracking-[-0.72px] leading-[140%] w-[375px] self-end">
           Веб-платформы, мобильные приложения и серверные системы — от первого
           MVP до архитектуры под высокую нагрузку. Работаем со стартапами,
           продуктовыми командами и крупным бизнесом.

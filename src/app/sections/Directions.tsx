@@ -32,7 +32,7 @@ const DIRECTIONS: Direction[] = [
 
 function Tag({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center justify-center rounded-[40px] whitespace-nowrap select-none bg-[#e6ebf5] text-[#030303] px-[15px] py-[12px] text-[16px] tracking-[-0.64px] font-['Inter:Regular',sans-serif] font-normal leading-[99.915%] cursor-default">
+    <span className="inline-flex items-center justify-center rounded-[40px] whitespace-nowrap select-none bg-[#e6ebf5] text-[#030303] px-[15px] py-[12px] text-[16px] tracking-[-0.64px] font-['Inter',sans-serif] font-normal leading-[99.915%] cursor-default">
       <span className="[text-box-edge:cap_alphabetic] [text-box-trim:trim-both]">{children}</span>
     </span>
   );
@@ -46,7 +46,7 @@ function DirectionCard({ title, tags, icon }: Direction) {
     >
       <div className="h-[80px] w-full flex items-center px-[16px] shrink-0">{icon}</div>
       <div className="flex-1 w-full flex flex-col items-end justify-between pb-[15px] px-[15px]">
-        <div className="font-['Manrope:ExtraBold',sans-serif] font-extrabold text-[#030303] text-[25px] leading-[99.9%] w-full whitespace-pre-line">
+        <div className="font-['Manrope',sans-serif] font-extrabold text-[#030303] text-[25px] leading-[99.9%] w-full whitespace-pre-line">
           {title}
         </div>
         <div className="flex flex-wrap gap-[10px] w-full">
